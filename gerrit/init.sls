@@ -140,13 +140,53 @@ gerrit-index:
       - cmd: gerrit-init
     - onlyif: test ! -e /home/gerrit2/review_site/index/gerrit_index.config
 
-/home/gerrit2/review_site/bin/gerrit.sh:
-  file.uncomment:
-    - char: '#'
-    - regex: '((chkconfig: 3 99 99)|(description: Gerrit Code Review)|(processname: gerrit))'
+#/home/gerrit2/review_site/bin/gerrit.sh:
+#  file.uncomment:
+#    - char: '#'
+#    - regex: '((chkconfig: 3 99 99)|(description: Gerrit Code Review)|(processname: gerrit))'
+#    - require:
+#      - cmd: gerrit-init
+#      - cmd: gerrit-index
+
+uncomment-chkconfig:
+  file.replace:
+    - name: /home/gerrit2/review_site/bin/gerrit.sh
+    - repl: |
+        chkconfig: 3 99 99
+    - pattern: |
+        # chkconfig: 3 99 99
+    - show_changes: True
     - require:
       - cmd: gerrit-init
       - cmd: gerrit-index
+
+
+uncomment-description:
+  file.replace:
+    - name: /home/gerrit2/review_site/bin/gerrit.sh
+    - repl: |
+        description: Gerrit Code Review
+    - pattern: |
+        # description: Gerrit Code Review
+    - show_changes: True
+    - require:
+      - cmd: gerrit-init
+      - cmd: gerrit-index
+
+
+uncomment-processname:
+  file.replace:
+    - name: /home/gerrit2/review_site/bin/gerrit.sh
+    - repl: |
+        processname: gerrit
+    - pattern: |
+        # processname: gerrit
+    - show_changes: True
+    - require:
+      - cmd: gerrit-init
+      - cmd: gerrit-index
+
+      
 
 /etc/init.d/gerrit:
   file.symlink:
